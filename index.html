@@ -118,7 +118,7 @@
             max-width: 350px;
         }
 
-        /* نافذة المتجر (Modal) */
+        /* نافذة المتجر والأقسام (Modal) */
         .store-modal {
             display: none;
             position: fixed;
@@ -184,52 +184,50 @@
             background-color: #121619;
             border: 1px solid var(--border-color);
             border-radius: 10px;
-            padding: 15px;
+            padding: 16px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .category-box:hover {
+            background-color: var(--card-hover);
+            border-color: var(--accent-gold);
         }
 
         .category-title {
             font-size: 1.1rem;
             color: var(--text-main);
-            font-weight: 500;
+            font-weight: 600;
         }
 
-        .btn-add-cat {
-            background-color: var(--accent-green);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 0.9rem;
+        .category-arrow {
+            color: var(--accent-gold);
+            font-size: 1.2rem;
             font-weight: bold;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        .btn-add-cat:hover {
-            opacity: 0.9;
         }
 
         .modal-footer-btn {
             display: block;
             width: 100%;
-            background-color: var(--accent-green);
-            color: white;
+            background-color: var(--card-hover);
+            color: var(--text-main);
             text-align: center;
             padding: 12px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             cursor: pointer;
             margin-top: 25px;
-            transition: background 0.3s;
+            transition: all 0.3s;
         }
 
         .modal-footer-btn:hover {
-            background-color: #245234;
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
         }
 
         /* سلة التسوق */
@@ -402,7 +400,7 @@
         <div class="cart-summary">
             <h3>سلة الطلبات المختارة</h3>
             <div id="cartItems">
-                <p style="color: var(--text-muted);">السلة فارغة حالياً. اضغط على أي متجر لاختيار الأقسام المطلوبة.</p>
+                <p style="color: var(--text-muted);">السلة فارغة حالياً. اضغط على أي متجر لاختيار المنتجات المطلوبة.</p>
             </div>
         </div>
 
@@ -447,7 +445,7 @@
             <div id="categoriesContainer" class="categories-container">
                 <!-- الأقسام الفرعية المعتمدة -->
             </div>
-            <button class="modal-footer-btn" onclick="closeStore()">تم وإضافة إلى السلة</button>
+            <button class="modal-footer-btn" onclick="closeStore()">إغلاق النافذة</button>
         </div>
     </div>
 
@@ -530,13 +528,10 @@
             container.innerHTML = '';
 
             store.categories.forEach(cat => {
-                const isSelected = cart[`${store.title} > ${cat}`] ? true : false;
                 container.innerHTML += `
                     <div class="category-box">
                         <span class="category-title">${cat}</span>
-                        <button class="btn-add-cat" onclick="toggleCategory('${store.title}', '${cat}', this)">
-                            ${isSelected ? 'تمت الإضافة ✓' : 'إضافة للسلة'}
-                        </button>
+                        <span class="category-arrow">←</span>
                     </div>
                 `;
             });
@@ -555,20 +550,6 @@
             }
         }
 
-        function toggleCategory(storeName, categoryName, btn) {
-            const cartKey = `${storeName} > ${categoryName}`;
-            if (cart[cartKey]) {
-                delete cart[cartKey];
-                btn.innerText = 'إضافة للسلة';
-                btn.style.backgroundColor = 'var(--accent-green)';
-            } else {
-                cart[cartKey] = true;
-                btn.innerText = 'تمت الإضافة ✓';
-                btn.style.backgroundColor = '#25d366';
-            }
-            renderCart();
-        }
-
         function removeFromCart(cartKey) {
             delete cart[cartKey];
             renderCart();
@@ -579,7 +560,7 @@
             const keys = Object.keys(cart);
 
             if (keys.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-muted);">السلة فارغة حالياً. اضغط على أي متجر لتصفح الأقسام وإضافة المنتجات.</p>';
+                container.innerHTML = '<p style="color: var(--text-muted);">السلة فارغة حالياً. اضغط على أي متجر لاختيار المنتجات المطلوبة.</p>';
                 return;
             }
 
@@ -587,7 +568,7 @@
             keys.forEach(key => {
                 container.innerHTML += `
                     <div class="cart-item">
-                        <span>• قسم: ${key}</span>
+                        <span>• ${key}</span>
                         <button onclick="removeFromCart('${key}')">حذف</button>
                     </div>
                 `;
@@ -599,7 +580,7 @@
 
             const keys = Object.keys(cart);
             if (keys.length === 0) {
-                alert('يرجى اختيار قسم واحد على الأقل للسلة قبل إرسال الطلب!');
+                alert('السلة فارغة حالياً! يرجى إضافة طلبات قبل الإرسال.');
                 return;
             }
 
@@ -620,7 +601,7 @@
             messageText += `الاسم: ${name}%0A`;
             messageText += `الرقم: ${phone}%0A`;
             messageText += `العنوان: ${address}%0A%0A`;
-            messageText += `الأقسام المطلوبة:%0A`;
+            messageText += `الطلبات:%0A`;
             messageText += `${itemsList}%0A`;
             messageText += `ملاحظات إضافية:%0A`;
             messageText += `${notes ? notes : "لا يوجد"}`;
