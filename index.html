@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سوق زاد الإلكتروني | ZAD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #121619;
+            --card-bg: #1a2126;
+            --card-hover: #222c33;
+            --accent-green: #2e6943;
+            --accent-gold: #c5a880;
+            --text-main: #f0f4f8;
+            --text-muted: #9ba3af;
+            --border-color: #2a343d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        header {
+            text-align: center;
+            padding: 35px 20px;
+            background: linear-gradient(to bottom, #182026, var(--bg-color));
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: var(--accent-gold);
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--accent-gold);
+            margin: 25px 0 15px 0;
+            padding-right: 10px;
+            border-right: 4px solid var(--accent-green);
+        }
+
+        /* شبكة المتاجر (3-3-1) */
+        .stores-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .store-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .store-card:hover {
+            background-color: var(--card-hover);
+            border-color: var(--accent-gold);
+            transform: translateY(-4px);
+        }
+
+        .store-icon {
+            font-size: 2.8rem;
+            margin-bottom: 12px;
+        }
+
+        .store-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .store-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .last-row {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .last-row .store-card {
+            width: 100%;
+            max-width: 350px;
+        }
+
+        /* نافذة المتجر (Modal) */
+        .store-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            border: 1px solid var(--accent-gold);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 650px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 1.8rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: var(--accent-gold);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            color: var(--accent-gold);
+            font-size: 1.6rem;
+        }
+
+        .categories-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .category-box {
+            background-color: #121619;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-title {
+            font-size: 1.1rem;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .btn-add-cat {
+            background-color: var(--accent-green);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-add-cat:hover {
+            opacity: 0.9;
+        }
+
+        .modal-footer-btn {
+            display: block;
+            width: 100%;
+            background-color: var(--accent-green);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: background 0.3s;
+        }
+
+        .modal-footer-btn:hover {
+            background-color: #245234;
+        }
+
+        /* سلة التسوق */
+        .cart-summary {
+            background-color: #182026;
+            border: 1px solid var(--accent-gold);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 40px 0 30px 0;
+        }
+
+        .cart-summary h3 {
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            border-bottom: 1px solid #222c33;
+        }
+
+        .cart-item button {
+            background: none;
+            border: none;
+            color: #ff6b6b;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .order-section {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .order-section h2 {
+            font-size: 1.4rem;
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background-color: #121619;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+        }
+
+        .whatsapp-btn {
+            display: block;
+            width: 100%;
+            background-color: #25d366;
+            color: white;
+            text-align: center;
+            padding: 14px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 20px;
+        }
+
+        .whatsapp-btn:hover {
+            background-color: #1ebe5d;
+        }
+
+        @media (max-width: 768px) {
+            .stores-grid {
+                grid-template-columns: 1fr;
+            }
+            .last-row .store-card {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>سُوق زَاد</h1>
+        <p>منصتك المتكاملة لمستلزمات البيت الأردني</p>
+    </header>
+
+    <div class="container">
+        
+        <div class="section-title">اختر المتجر للتسوق:</div>
+
+        <!-- الصف الأول (3 متاجر) -->
+        <div class="stores-grid">
+            <div class="store-card" onclick="openStore('supermarket')">
+                <div class="store-icon">🛒</div>
+                <div class="store-name">السوبر ماركت</div>
+                <div class="store-desc">المواد التموينية، المعلبات والمشروبات</div>
+            </div>
+
+            <div class="store-card" onclick="openStore('vegetables')">
+                <div class="store-icon">🥦</div>
+                <div class="store-name">الخضار والفواكه</div>
+                <div class="store-desc">الخضروات والفواكه</div>
+            </div>
+
+            <div class="store-card" onclick="openStore('dairy')">
+                <div class="store-icon">🧀</div>
+                <div class="store-name">الألبان والأجبان</div>
+                <div class="store-desc">الألبان، الأجبان والمخللات</div>
+            </div>
+        </div>
+
+        <!-- الصف الثاني (3 متاجر) -->
+        <div class="stores-grid">
+            <div class="store-card" onclick="openStore('spices')">
+                <div class="store-icon">🌿</div>
+                <div class="store-name">العطارة والبهارات</div>
+                <div class="store-desc">البهارات، الأعشاب ومستلزمات الطهي</div>
+            </div>
+
+            <div class="store-card" onclick="openStore('roastery')">
+                <div class="store-icon">🥜</div>
+                <div class="store-name">المحمص والمكسرات</div>
+                <div class="store-desc">القهوة، التمور، المكسرات والمسليات</div>
+            </div>
+
+            <div class="store-card" onclick="openStore('meats')">
+                <div class="store-icon">🥩</div>
+                <div class="store-name">اللحوم والدواجن</div>
+                <div class="store-desc">اللحوم والدواجن والمجمدات</div>
+            </div>
+        </div>
+
+        <!-- الصف الثالث (متجر واحد في المنتصف) -->
+        <div class="last-row">
+            <div class="store-card" onclick="openStore('cleaners')">
+                <div class="store-icon">🧼</div>
+                <div class="store-name">المنظفات ومواد العناية</div>
+                <div class="store-desc">العناية الشخصية ومستلزمات المنزل</div>
+            </div>
+        </div>
+
+        <!-- ملخص السلة -->
+        <div class="cart-summary">
+            <h3>سلة الطلبات المختارة</h3>
+            <div id="cartItems">
+                <p style="color: var(--text-muted);">السلة فارغة حالياً. اضغط على أي متجر لاختيار الأقسام المطلوبة.</p>
+            </div>
+        </div>
+
+        <!-- نموذج إرسال البيانات -->
+        <div class="order-section">
+            <h2>تأكيد الطلب وإرساله عبر الواتساب</h2>
+            <form id="whatsappForm" onsubmit="sendToWhatsApp(event)">
+                <div class="form-group">
+                    <label for="fullName">الاسم الرباعي:</label>
+                    <input type="text" id="fullName" required placeholder="مثال: محمد علي أحمد محمد">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">رقم الهاتف:</label>
+                    <input type="tel" id="phone" required placeholder="07xxxxxxxx">
+                </div>
+
+                <div class="form-group">
+                    <label for="address">العنوان / المنطقة:</label>
+                    <input type="text" id="address" required placeholder="مثال: الشونة الجنوبية، الجوفة أو الكرامة">
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">ملاحظات إضافية على الطلب:</label>
+                    <textarea id="notes" rows="3" placeholder="أي أصناف أخرى أو ملاحظات للتوصيل..."></textarea>
+                </div>
+
+                <button type="submit" class="whatsapp-btn">تأكيد وإرسال الطلب عبر الواتساب</button>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- نافذة المتجر والأقسام (Modal) -->
+    <div id="storeModal" class="store-modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeStore()">&times;</span>
+            <div class="modal-header">
+                <span id="modalIcon" style="font-size: 2.5rem;">🛒</span>
+                <h2 id="modalTitle">اسم المتجر</h2>
+            </div>
+            <div id="categoriesContainer" class="categories-container">
+                <!-- الأقسام الفرعية المعتمدة -->
+            </div>
+            <button class="modal-footer-btn" onclick="closeStore()">تم وإضافة إلى السلة</button>
+        </div>
+    </div>
+
+    <script>
+        // هيكلة المتاجر والتصنيفات الفرعية بالحرف
+        const storesData = {
+            supermarket: {
+                title: 'السوبر ماركت',
+                icon: '🛒',
+                categories: [
+                    'مواد تموينية ومعلبات',
+                    'المشروبات والعصائر',
+                    'التسالي والسكاكر'
+                ]
+            },
+            vegetables: {
+                title: 'الخضار والفواكه',
+                icon: '🥦',
+                categories: [
+                    'الخضروات',
+                    'الفاكهة'
+                ]
+            },
+            dairy: {
+                title: 'الألبان والأجبان',
+                icon: '🧀',
+                categories: [
+                    'الحليب والألبان الطازجة',
+                    'الأجبان البلدية والبيضاء',
+                    'أجبان الدهن والمطبوخة',
+                    'المخللات ومكملات المائدة'
+                ]
+            },
+            spices: {
+                title: 'العطارة والبهارات',
+                icon: '🌿',
+                categories: [
+                    'البهارات والتوابل المطحونة',
+                    'البهارات الصحيحة (حب)',
+                    'الأعشاب والمشروبات الساخنة',
+                    'مستلزمات الطهي الخاصة'
+                ]
+            },
+            roastery: {
+                title: 'المحمص والمكسرات',
+                icon: '🥜',
+                categories: [
+                    'القهوة والتمور والمجففات',
+                    'المكسرات الفاخرة',
+                    'المسليات والموالح اليومية',
+                    'الشوكولاتة والسكاكر'
+                ]
+            },
+            meats: {
+                title: 'اللحوم والدواجن',
+                icon: '🥩',
+                categories: [
+                    'اللحوم والدواجن الطازجة',
+                    'المجمدات'
+                ]
+            },
+            cleaners: {
+                title: 'المنظفات ومواد العناية',
+                icon: '🧼',
+                categories: [
+                    'العناية الشخصية والنظافة',
+                    'منظفات ومستلزمات المنزل'
+                ]
+            }
+        };
+
+        const cart = {};
+
+        function openStore(storeKey) {
+            const store = storesData[storeKey];
+            document.getElementById('modalTitle').innerText = store.title;
+            document.getElementById('modalIcon').innerText = store.icon;
+
+            const container = document.getElementById('categoriesContainer');
+            container.innerHTML = '';
+
+            store.categories.forEach(cat => {
+                const isSelected = cart[`${store.title} > ${cat}`] ? true : false;
+                container.innerHTML += `
+                    <div class="category-box">
+                        <span class="category-title">${cat}</span>
+                        <button class="btn-add-cat" onclick="toggleCategory('${store.title}', '${cat}', this)">
+                            ${isSelected ? 'تمت الإضافة ✓' : 'إضافة للسلة'}
+                        </button>
+                    </div>
+                `;
+            });
+
+            document.getElementById('storeModal').style.display = 'flex';
+        }
+
+        function closeStore() {
+            document.getElementById('storeModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('storeModal');
+            if (event.target === modal) {
+                closeStore();
+            }
+        }
+
+        function toggleCategory(storeName, categoryName, btn) {
+            const cartKey = `${storeName} > ${categoryName}`;
+            if (cart[cartKey]) {
+                delete cart[cartKey];
+                btn.innerText = 'إضافة للسلة';
+                btn.style.backgroundColor = 'var(--accent-green)';
+            } else {
+                cart[cartKey] = true;
+                btn.innerText = 'تمت الإضافة ✓';
+                btn.style.backgroundColor = '#25d366';
+            }
+            renderCart();
+        }
+
+        function removeFromCart(cartKey) {
+            delete cart[cartKey];
+            renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            const keys = Object.keys(cart);
+
+            if (keys.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted);">السلة فارغة حالياً. اضغط على أي متجر لتصفح الأقسام وإضافة المنتجات.</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            keys.forEach(key => {
+                container.innerHTML += `
+                    <div class="cart-item">
+                        <span>• قسم: ${key}</span>
+                        <button onclick="removeFromCart('${key}')">حذف</button>
+                    </div>
+                `;
+            });
+        }
+
+        function sendToWhatsApp(event) {
+            event.preventDefault();
+
+            const keys = Object.keys(cart);
+            if (keys.length === 0) {
+                alert('يرجى اختيار قسم واحد على الأقل للسلة قبل إرسال الطلب!');
+                return;
+            }
+
+            const name = document.getElementById('fullName').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const notes = document.getElementById('notes').value.trim();
+
+            const targetWhatsAppNumber = "962796453822"; 
+
+            let itemsList = "";
+            keys.forEach((key, index) => {
+                itemsList += `${index + 1}. ${key}%0A`;
+            });
+
+            let messageText = `طلب جديد من سوق زاد%0A%0A`;
+            messageText += `بيانات العميل:%0A`;
+            messageText += `الاسم: ${name}%0A`;
+            messageText += `الرقم: ${phone}%0A`;
+            messageText += `العنوان: ${address}%0A%0A`;
+            messageText += `الأقسام المطلوبة:%0A`;
+            messageText += `${itemsList}%0A`;
+            messageText += `ملاحظات إضافية:%0A`;
+            messageText += `${notes ? notes : "لا يوجد"}`;
+
+            const whatsappUrl = `https://wa.me/${targetWhatsAppNumber}?text=${messageText}`;
+            window.open(whatsappUrl, '_blank');
+        }
+    </script>
+
+</body>
+</html>
